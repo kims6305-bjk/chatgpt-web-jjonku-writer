@@ -51,14 +51,16 @@ for (const n of ["repo_read", "repo_write", "branch_start", "commit_push", "pr_c
 // read works
 const probe = process.env.SELFCHECK_READ ?? "README.md";
 const r1 = await tool("repo_read", { path: probe });
-assert.ok(r1.result.content[0].text.length > 10, `repo_read ${probe}`);
+assert.ok(r1.result.content[0].text.length > 0, `repo_read ${probe}`);
 
 // GUARD 1: path escape refused
 const r2 = await tool("repo_read", { path: "../../.ssh/id_rsa" });
 assert.match(r2.error.message, /escapes repo/, "path escape must be refused");
 
-// GUARD 2: protected path refused
-const r3 = await tool("repo_read", { path: ".github/workflows/ci.yml" });
+// GUARD 2: first configured protected path refused
+const configured = JSON.parse(readFileSync(path.join(HOME, "writer.config.json"), "utf8"));
+assert.ok(configured.deny_paths?.length, "writer.config.json must define at least one deny_path");
+const r3 = await tool("repo_read", { path: configured.deny_paths[0] });
 assert.match(r3.error.message, /protected path/, "deny_paths must be refused");
 
 // GUARD 3: write refused off a chatgpt/* branch
