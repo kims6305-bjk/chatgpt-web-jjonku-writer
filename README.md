@@ -9,6 +9,11 @@
 A local stdio MCP server + OpenAI Secure Tunnel that gives web ChatGPT (chatgpt.com, phone or desktop)
 read/write/commit/PR access to **one repository on your machine** — with no shell exposure.
 
+> **Plan requirement (current OpenAI policy):** the full MCP write/modify actions used by this repo
+> require **ChatGPT Business, Enterprise, or Edu**. Personal **Pro** can connect custom MCP apps only
+> for read/fetch actions; Plus and Free do not currently provide this full write-capable workflow.
+> Source: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
+
 ```
 Web ChatGPT  →  OpenAI Secure Tunnel  →  your machine (tunnel-client)
              →  stdio MCP git writer  →  your repo  →  chatgpt/* branch  →  PR

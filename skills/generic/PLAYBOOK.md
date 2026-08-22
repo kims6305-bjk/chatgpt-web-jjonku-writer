@@ -6,6 +6,10 @@ Codex pool your coding CLI drains.
 
 ## When to use this
 
+**Plan gate:** full MCP write/modify actions currently require ChatGPT Business, Enterprise, or Edu.
+Personal Pro supports custom MCP read/fetch only; Plus and Free do not support this full workflow.
+Verify the current policy at https://help.openai.com/en/articles/12584461 before setup.
+
 - The user says their coding CLI hit a usage limit and wants to keep working from chatgpt.com.
 - The user asks to install / repair / operate a local MCP "git writer" behind an OpenAI tunnel.
 - Tools defined here (`repo_read`, `branch_start`, `pr_create`, ...) show up in a ChatGPT connector

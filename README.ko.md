@@ -6,6 +6,8 @@
 
 ChatGPT 웹앱이 로컬 저장소를 직접 읽고 수정하고 테스트한 뒤 PR까지 올리게 하는 **OpenAI Secure Tunnel + stdio MCP Git writer**입니다. 범용 셸은 노출하지 않습니다.
 
+> **현재 요금제 조건:** 이 레포가 사용하는 전체 MCP 쓰기·수정 기능은 **ChatGPT Business, Enterprise 또는 Edu**가 필요합니다. 개인 **Pro**는 커스텀 MCP를 read/fetch 용도로만 연결할 수 있고, Plus·Free는 현재 이 전체 쓰기 워크플로를 지원하지 않습니다. 근거: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
+
 ```text
 웹 ChatGPT → OpenAI Secure Tunnel → 내 컴퓨터의 tunnel-client
             → stdio MCP Git writer → 지정 저장소 → chatgpt/* 브랜치 → PR
