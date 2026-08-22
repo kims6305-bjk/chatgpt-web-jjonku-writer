@@ -10,8 +10,19 @@ Codex pool your coding CLI drains.
 ## When to use this
 
 **Plan gate:** full MCP write/modify actions currently require ChatGPT Business, Enterprise, or Edu.
-Personal Pro supports custom MCP read/fetch only; Plus and Free do not support this full workflow.
+Personal Pro supports custom MCP read/fetch only; Plus, Free, and Go do not support this workflow.
 Verify the current policy at https://help.openai.com/en/articles/12584461 before setup.
+
+**Luna is not a loophole:** OpenAI documents Luna as unlimited where offered, but currently defaults
+it to Free/Go, which lack custom MCP. Pro can use read/fetch MCP, but Luna is not guaranteed in its
+model picker. Never claim unlimited personal Luna+MCP without an end-to-end test on that account.
+
+Two profiles ship:
+- full: `writer.config.example.json` + `selfcheck.mjs`
+- personal Pro read-only: `writer.config.personal-pro.example.json` + `selfcheck-readonly.mjs`
+
+Read-only mode must expose exactly `repo_read`, `repo_search`, and `git_diff`, all with MCP
+`readOnlyHint=true`. Mutation tools must be absent from discovery and fail if called directly.
 
 - The user says their coding CLI hit a usage limit and wants to keep working from chatgpt.com.
 - The user asks to install / repair / operate a local MCP "git writer" behind an OpenAI tunnel.

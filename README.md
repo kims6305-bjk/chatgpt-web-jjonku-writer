@@ -13,6 +13,21 @@ read/write/commit/PR access to **one repository on your machine** — with no sh
 > require **ChatGPT Business, Enterprise, or Edu**. Personal **Pro** can connect custom MCP apps only
 > for read/fetch actions; Plus and Free do not currently provide this full write-capable workflow.
 > Source: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
+>
+> **About Luna:** GPT-5.6 Luna is unlimited/credit-free where offered, but OpenAI currently documents
+> Luna as the default for Free and Go — plans that do not support this custom MCP workflow. Personal
+> Pro supports read/fetch MCP, but Luna is not guaranteed in its picker. Do not market “unlimited
+> personal Luna + MCP” unless that exact combination appears and works in the operator's account.
+
+### Two supported profiles
+
+| Profile | Plan | Exposed tools | Status |
+|---|---|---|---|
+| Full writer | Business / Enterprise / Edu | all 9 tools: read, write, checks, commit, PR, merge | end-to-end verified |
+| Personal read-only | Pro | `repo_read`, `repo_search`, `git_diff` only | code-level verified; Pro account E2E not tested here |
+
+The personal profile is fail-closed: mutation tools are omitted from discovery **and** rejected when
+called directly. Plus, Free, and Go are not supported by the current OpenAI custom-MCP policy.
 
 ```
 Web ChatGPT  →  OpenAI Secure Tunnel  →  your machine (tunnel-client)
@@ -160,9 +175,20 @@ Then, in order:
 3. **Configure**:
    ```bash
    cd ~/.local/share/webgpt-git-writer
-   cp writer.config.example.json writer.config.json   # set repo_root, base_branch, checks
-   ./set-key.sh                                        # paste key (hidden), paste tunnel id
-   node selfcheck.mjs                                  # must print ALL PASS
+
+   # Choose ONE profile, then edit repo_root / base_branch / deny_paths:
+
+   # Business / Enterprise / Edu — full read/write
+   cp writer.config.example.json writer.config.json
+   $EDITOR writer.config.json             # set repo_root / base_branch / deny_paths
+   node selfcheck.mjs                     # must print ALL PASS
+
+   # Personal Pro — read/fetch only (instead of the two lines above)
+   # cp writer.config.personal-pro.example.json writer.config.json
+   # $EDITOR writer.config.json
+   # node selfcheck-readonly.mjs          # must print READ-ONLY PASS
+
+   ./set-key.sh                         # paste key (hidden), paste tunnel id
    ```
 4. **Register the profile and start the daemon**:
    ```bash

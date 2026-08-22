@@ -11,6 +11,7 @@ const CFG_PATH =
   path.join(path.dirname(fileURLToPath(import.meta.url)), "writer.config.json");
 const CFG = JSON.parse(readFileSync(CFG_PATH, "utf8"));
 const ROOT = path.resolve(CFG.repo_root);
+const READ_ONLY = CFG.read_only === true;
 const PREFIX = CFG.branch_prefix ?? "chatgpt/";
 const CHECKS = CFG.checks ?? {};           // {name: ["cmd","arg",...]}
 const DENY = (CFG.deny_paths ?? [".github/workflows", ".git/config"]).map((p) => p.replace(/\/+$/, ""));
@@ -42,11 +43,13 @@ function requireWorkBranch() {
 
 const TOOLS = {
   repo_read: {
+    readOnly: true,
     desc: "Read a file in the repo.",
     schema: { type: "object", properties: { path: { type: "string" } }, required: ["path"] },
     fn: ({ path: p }) => readFileSync(safePath(p), "utf8"),
   },
   repo_search: {
+    readOnly: true,
     desc: "git grep in the repo.",
     schema: { type: "object", properties: { pattern: { type: "string" } }, required: ["pattern"] },
     fn: ({ pattern }) => run("git", ["grep", "-n", "--", pattern]).stdout || "(no match)",
@@ -78,6 +81,7 @@ const TOOLS = {
     },
   },
   git_diff: {
+    readOnly: true,
     desc: "Show the working diff (staged + unstaged).",
     schema: { type: "object", properties: {} },
     fn: () => run("git", ["diff", "HEAD"]).stdout || "(clean)",
@@ -140,10 +144,18 @@ function handle(req) {
     };
   if (method === "tools/list")
     return {
-      tools: Object.entries(TOOLS).map(([name, t]) => ({ name, description: t.desc, inputSchema: t.schema })),
+      tools: Object.entries(TOOLS)
+        .filter(([, t]) => !READ_ONLY || t.readOnly)
+        .map(([name, t]) => ({
+          name,
+          description: t.desc,
+          inputSchema: t.schema,
+          annotations: { readOnlyHint: t.readOnly === true },
+        })),
     };
   if (method === "tools/call") {
     const t = TOOLS[params.name] ?? fail(`unknown tool: ${params.name}`);
+    if (READ_ONLY && !t.readOnly) fail(`tool unavailable in read-only mode: ${params.name}`);
     return { content: [{ type: "text", text: String(t.fn(params.arguments ?? {})) }] };
   }
   fail(`unknown method: ${method}`);

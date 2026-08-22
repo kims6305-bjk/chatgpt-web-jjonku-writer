@@ -1,0 +1,12 @@
+{
+  "repo_root": "/absolute/path/to/your/repo",
+  "read_only": true,
+  "base_branch": "main",
+  "branch_prefix": "chatgpt/",
+  "deny_paths": [
+    ".github/workflows",
+    ".git/config",
+    ".env"
+  ],
+  "checks": {}
+}

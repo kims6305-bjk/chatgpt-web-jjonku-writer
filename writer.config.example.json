@@ -1,5 +1,6 @@
 {
   "repo_root": "/absolute/path/to/your/repo",
+  "read_only": false,
   "base_branch": "main",
   "branch_prefix": "chatgpt/",
   "deny_paths": [

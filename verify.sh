@@ -17,7 +17,11 @@ else
 fi
 
 echo "== guards =="
-( cd "$HOME_DIR" && node selfcheck.mjs )
+if node -e 'const c=require(process.argv[1]); process.exit(c.read_only === true ? 0 : 1)' "$HOME_DIR/writer.config.json"; then
+  ( cd "$HOME_DIR" && node selfcheck-readonly.mjs )
+else
+  ( cd "$HOME_DIR" && node selfcheck.mjs )
+fi
 
 echo "== calls forwarded from ChatGPT =="
 if [ -f "$HOME_DIR/tunnel.log" ]; then

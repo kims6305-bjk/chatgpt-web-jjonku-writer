@@ -7,6 +7,17 @@
 ChatGPT 웹앱이 로컬 저장소를 직접 읽고 수정하고 테스트한 뒤 PR까지 올리게 하는 **OpenAI Secure Tunnel + stdio MCP Git writer**입니다. 범용 셸은 노출하지 않습니다.
 
 > **현재 요금제 조건:** 이 레포가 사용하는 전체 MCP 쓰기·수정 기능은 **ChatGPT Business, Enterprise 또는 Edu**가 필요합니다. 개인 **Pro**는 커스텀 MCP를 read/fetch 용도로만 연결할 수 있고, Plus·Free는 현재 이 전체 쓰기 워크플로를 지원하지 않습니다. 근거: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
+>
+> **Luna 주의:** GPT-5.6 Luna는 제공되는 화면에서는 무크레딧·무제한이지만, OpenAI는 현재 Luna를 Free·Go의 기본 모델로 안내합니다. Free·Go는 커스텀 MCP를 지원하지 않습니다. 개인 Pro는 read/fetch MCP를 지원하지만 Luna가 모델 선택기에 나온다는 보장은 없습니다. 따라서 실제 Pro 계정에서 Luna와 커스텀 MCP가 함께 보이고 작동하기 전에는 “개인 Luna 무제한 MCP”라고 배포하지 않습니다.
+
+### 제공 프로필 2종
+
+| 프로필 | 요금제 | 노출 도구 | 검증 상태 |
+|---|---|---|---|
+| 전체 writer | Business / Enterprise / Edu | 읽기·쓰기·검사·커밋·PR·merge 9종 | 종단 검증 완료 |
+| 개인 read-only | Pro | `repo_read`, `repo_search`, `git_diff` 3종 | 코드 검증 완료, Pro 계정 종단 미검증 |
+
+개인 프로필은 fail-closed입니다. 쓰기 도구를 discovery에서 숨기고 직접 호출해도 서버가 거부합니다. Plus·Free·Go는 현재 OpenAI 공식 커스텀 MCP 지원 범위 밖입니다.
 
 ```text
 웹 ChatGPT → OpenAI Secure Tunnel → 내 컴퓨터의 tunnel-client
@@ -105,10 +116,18 @@ cd chatgpt-web-jjonku-writer
 
 ```bash
 cd ~/.local/share/webgpt-git-writer
+
+# Business / Enterprise / Edu: 전체 read/write 프로필
 cp writer.config.example.json writer.config.json
 # writer.config.json에서 repo_root / base_branch / deny_paths / checks 수정
-./set-key.sh
 node selfcheck.mjs   # ALL PASS 확인
+
+# 개인 Pro: read/fetch 전용(위 3줄 대신 사용)
+# cp writer.config.personal-pro.example.json writer.config.json
+# repo_root / base_branch / deny_paths 수정
+# node selfcheck-readonly.mjs   # READ-ONLY PASS 확인
+
+./set-key.sh
 ```
 
 ### 4. 터널 프로필과 상시 서비스
