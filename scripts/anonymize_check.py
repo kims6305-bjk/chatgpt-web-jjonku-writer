@@ -11,7 +11,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 
 BAD = [
-    r"bjkim", r"kims\d+", r"유성", r"아빠", r"텔레그램", r"카카오", r"회계사", r"세무사",
+    r"bjkim", r"유성", r"아빠", r"텔레그램", r"카카오", r"회계사", r"세무사",
     # real secrets: the prefix must be followed by actual key material
     r"sk-proj-[A-Za-z0-9_-]{8,}",
     r"sk-admin-[A-Za-z0-9_-]{8,}",

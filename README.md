@@ -1,4 +1,8 @@
-# webgpt-git-writer
+# ChatGPT Web Jjonku Writer
+
+[**English**](README.md) | [한국어](README.ko.md)
+
+> **Jjonku (쫀쿠)** is Korean AI-community slang for an AI subscription/account. “Web jjonku” means using the regular ChatGPT web-app allowance rather than the Codex CLI allowance.
 
 **Let the ChatGPT web app write code in your local repo — on a usage quota separate from Codex.**
 
@@ -135,8 +139,8 @@ E2E PASS: branch -> write -> diff -> check -> commit -> push, main untouched
 Prereqs: Node 18+, `git`, `gh` (authenticated), a repo with a remote.
 
 ```bash
-git clone https://github.com/<you>/webgpt-git-writer
-cd webgpt-git-writer
+git clone https://github.com/kims6305-bjk/chatgpt-web-jjonku-writer
+cd chatgpt-web-jjonku-writer
 ./install.sh            # copies writer to ~/.local/share/webgpt-git-writer, downloads tunnel-client (checksum-verified)
 ```
 

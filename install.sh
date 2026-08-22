@@ -14,7 +14,7 @@ esac
 
 mkdir -p "$HOME_DIR" "$BIN_DIR"
 cp "$SRC/server.mjs" "$SRC/selfcheck.mjs" "$SRC/writer.config.example.json" "$HOME_DIR/"
-cp "$SRC/set-key.sh" "$SRC/setup-tunnel.sh" "$SRC/install-service.sh" "$HOME_DIR/"
+cp "$SRC/set-key.sh" "$SRC/setup-tunnel.sh" "$SRC/install-service.sh" "$SRC/verify.sh" "$HOME_DIR/"
 chmod +x "$HOME_DIR"/*.sh
 echo "writer -> $HOME_DIR"
 
