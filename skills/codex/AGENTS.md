@@ -9,17 +9,18 @@ Codex pool your coding CLI drains.
 
 ## When to use this
 
-**Plan gate:** full MCP write/modify actions currently require ChatGPT Business, Enterprise, or Edu.
-Personal Pro supports custom MCP read/fetch only; Plus, Free, and Go do not support this workflow.
-Verify the current policy at https://help.openai.com/en/articles/12584461 before setup.
+**Plan handling:** Business/Enterprise/Edu full write is officially supported; Business is E2E
+verified here. ChatGPT pricing lists Developer mode for Plus and Pro, so personal accounts try the
+same full profile first. OpenAI's separate MCP help still labels full write as Business/Enterprise/Edu
+and Pro as read/fetch-only, so personal write availability is account-rollout dependent. Free/Go lack
+Developer mode. Re-check https://help.openai.com/en/articles/12584461 and https://chatgpt.com/pricing.
 
-**Luna surface boundary:** Luna is not selectable in standard paid Chat, but OpenAI documents it as
-available in Work and Codex for Plus and Pro. That does not erase the separate MCP permission gate:
-personal Pro custom MCP is read/fetch-only; full write/modify requires Business/Enterprise/Edu.
+**Luna:** pricing lists Luna for Plus and unlimited for Pro. Use it with the full profile when all
+nine actions scan successfully; otherwise switch to the fail-closed read-only fallback.
 
 Two profiles ship:
-- full: `writer.config.example.json` + `selfcheck.mjs`
-- personal Pro read-only: `writer.config.personal-pro.example.json` + `selfcheck-readonly.mjs`
+- full first: `writer.config.example.json` + `selfcheck.mjs` (all supported plans, including Plus/Pro)
+- personal fallback: `writer.config.personal-pro.example.json` + `selfcheck-readonly.mjs`
 
 Read-only mode must expose exactly `repo_read`, `repo_search`, and `git_diff`, all with MCP
 `readOnlyHint=true`. Mutation tools must be absent from discovery and fail if called directly.

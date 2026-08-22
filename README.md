@@ -9,26 +9,29 @@
 A local stdio MCP server + OpenAI Secure Tunnel that gives web ChatGPT (chatgpt.com, phone or desktop)
 read/write/commit/PR access to **one repository on your machine** — with no shell exposure.
 
-> **Plan requirement (current OpenAI policy):** the full MCP write/modify actions used by this repo
-> require **ChatGPT Business, Enterprise, or Edu**. Personal **Pro** can connect custom MCP apps only
-> for read/fetch actions; Plus and Free do not currently provide this full write-capable workflow.
-> Source: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
+> **Plan behavior:** this repository ships the same guarded 9-tool writer for every account. It is
+> end-to-end verified on **Business**. The current ChatGPT pricing page lists Developer mode for both
+> **Plus and Pro**, so personal accounts should try the full profile first. OpenAI's separate MCP help
+> page still says full write/modify is officially supported only on Business/Enterprise/Edu and Pro is
+> read/fetch-only; therefore Plus/Pro full write remains **account-rollout dependent** until observed.
+> Sources: [MCP help](https://help.openai.com/en/articles/12584461) and
+> [ChatGPT pricing](https://chatgpt.com/pricing).
 >
-> **About Luna:** OpenAI documents Luna as unavailable in standard paid Chat, but available in
-> **Work and Codex for Plus and Pro** (as well as Business/Enterprise). Separately, OpenAI's custom-MCP
-> policy says personal **Pro is read/fetch-only** and full write/modify requires Business/Enterprise/Edu.
-> Therefore Luna+personal-Pro read-only is a supported target; Luna+personal full writer is not an
-> officially supported claim until OpenAI changes that policy or an account-level write test proves it.
+> **Luna:** OpenAI lists GPT-5.6 Luna for Plus and unlimited for Pro, and documents Luna in Work/Codex.
+> Use Luna with the full profile when the account exposes all actions; if write tools are rejected or
+> omitted during tool scan, switch to the bundled fail-closed read-only profile.
 
 ### Two supported profiles
 
 | Profile | Plan | Exposed tools | Status |
 |---|---|---|---|
-| Full writer | Business / Enterprise / Edu | all 9 tools: read, write, checks, commit, PR, merge | end-to-end verified |
-| Personal read-only | Pro | `repo_read`, `repo_search`, `git_diff` only | code-level verified; Pro account E2E not tested here |
+| Full writer | Business / Enterprise / Edu | all 9 tools: read, write, checks, commit, PR, merge | Business E2E verified |
+| Try full writer first | Plus / Pro | the same 9 tools | Developer mode documented; write actions depend on account rollout |
+| Personal read-only fallback | Plus / Pro | `repo_read`, `repo_search`, `git_diff` only | code + fresh-box verified |
 
-The personal profile is fail-closed: mutation tools are omitted from discovery **and** rejected when
-called directly. Plus, Free, and Go are not supported by the current OpenAI custom-MCP policy.
+Personal accounts try the full profile first. Fall back only if write tools are omitted or rejected.
+The fallback is fail-closed: mutation tools are omitted from discovery **and** rejected when called
+directly. Free and Go do not currently expose Developer mode.
 
 ```
 Web ChatGPT  →  OpenAI Secure Tunnel  →  your machine (tunnel-client)
@@ -179,12 +182,12 @@ Then, in order:
 
    # Choose ONE profile, then edit repo_root / base_branch / deny_paths:
 
-   # Business / Enterprise / Edu — full read/write
+   # Business / Enterprise / Edu / Plus / Pro — try full read/write first
    cp writer.config.example.json writer.config.json
    $EDITOR writer.config.json             # set repo_root / base_branch / deny_paths
    node selfcheck.mjs                     # must print ALL PASS
 
-   # Personal Pro — read/fetch only (instead of the two lines above)
+   # Plus/Pro fallback when write actions are omitted or rejected
    # cp writer.config.personal-pro.example.json writer.config.json
    # $EDITOR writer.config.json
    # node selfcheck-readonly.mjs          # must print READ-ONLY PASS

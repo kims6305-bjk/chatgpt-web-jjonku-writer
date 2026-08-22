@@ -6,18 +6,21 @@
 
 ChatGPT 웹앱이 로컬 저장소를 직접 읽고 수정하고 테스트한 뒤 PR까지 올리게 하는 **OpenAI Secure Tunnel + stdio MCP Git writer**입니다. 범용 셸은 노출하지 않습니다.
 
-> **현재 요금제 조건:** 이 레포가 사용하는 전체 MCP 쓰기·수정 기능은 **ChatGPT Business, Enterprise 또는 Edu**가 필요합니다. 개인 **Pro**는 커스텀 MCP를 read/fetch 용도로만 연결할 수 있고, Plus·Free는 현재 이 전체 쓰기 워크플로를 지원하지 않습니다. 근거: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
+> **요금제 동작:** 이 레포는 모든 계정에 동일한 가드형 9도구 writer를 제공합니다. **Business에서는 종단 검증 완료**했습니다. 현재 ChatGPT 요금표는 **Plus와 Pro 모두 Developer mode 지원**으로 표시하므로 개인 계정도 전체 프로필을 먼저 시도합니다. 다만 별도 OpenAI MCP 도움말은 전체 write/modify의 공식 지원을 Business·Enterprise·Edu로, Pro를 read/fetch 전용으로 안내하고 있어 Plus·Pro 전체 쓰기는 실제 계정 rollout에 따라 달라질 수 있습니다.
 >
-> **Luna 정리:** OpenAI 공식 문서상 Luna는 유료 사용자의 일반 Chat에서는 선택할 수 없지만 **Plus·Pro의 Work와 Codex에서는 사용 가능**합니다(Business·Enterprise도 가능). 별도로 커스텀 MCP 정책은 개인 **Pro를 read/fetch 전용**으로 제한하고, 전체 write/modify는 Business·Enterprise·Edu에만 허용합니다. 따라서 Luna+개인 Pro read-only는 배포 대상이지만, Luna+개인 전체 writer는 정책 변경 또는 실제 계정 쓰기 종단시험 전에는 공식 지원으로 주장하지 않습니다.
+> 근거: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461), [ChatGPT 요금표](https://chatgpt.com/pricing).
+>
+> **Luna:** 공식 요금표는 Plus에 Luna를 제공하고 Pro에는 Luna 무제한으로 표시합니다. 계정에서 전체 action이 노출되면 Luna+전체 프로필을 사용하고, tool scan에서 쓰기 도구가 빠지거나 거부되면 동봉된 fail-closed read-only 프로필로 전환합니다.
 
 ### 제공 프로필 2종
 
 | 프로필 | 요금제 | 노출 도구 | 검증 상태 |
 |---|---|---|---|
-| 전체 writer | Business / Enterprise / Edu | 읽기·쓰기·검사·커밋·PR·merge 9종 | 종단 검증 완료 |
-| 개인 read-only | Pro | `repo_read`, `repo_search`, `git_diff` 3종 | 코드 검증 완료, Pro 계정 종단 미검증 |
+| 전체 writer | Business / Enterprise / Edu | 읽기·쓰기·검사·커밋·PR·merge 9종 | Business 종단 검증 완료 |
+| 전체 writer 우선 시도 | Plus / Pro | 동일한 9종 | Developer mode는 공식 제공, 쓰기 action은 계정 rollout 의존 |
+| 개인 read-only 폴백 | Plus / Pro | `repo_read`, `repo_search`, `git_diff` 3종 | 코드·fresh-box 검증 완료 |
 
-개인 프로필은 fail-closed입니다. 쓰기 도구를 discovery에서 숨기고 직접 호출해도 서버가 거부합니다. Plus·Free·Go는 현재 OpenAI 공식 커스텀 MCP 지원 범위 밖입니다.
+개인 계정도 전체 프로필부터 연결합니다. tool scan에 쓰기 도구가 없거나 호출이 거부될 때만 read-only로 전환합니다. read-only는 쓰기 도구를 discovery에서 숨기고 직접 호출해도 서버가 거부하는 fail-closed 폴백입니다. Free·Go는 Developer mode 미지원입니다.
 
 ```text
 웹 ChatGPT → OpenAI Secure Tunnel → 내 컴퓨터의 tunnel-client
@@ -117,12 +120,12 @@ cd chatgpt-web-jjonku-writer
 ```bash
 cd ~/.local/share/webgpt-git-writer
 
-# Business / Enterprise / Edu: 전체 read/write 프로필
+# Business / Enterprise / Edu / Plus / Pro: 전체 프로필을 먼저 시도
 cp writer.config.example.json writer.config.json
 # writer.config.json에서 repo_root / base_branch / deny_paths / checks 수정
 node selfcheck.mjs   # ALL PASS 확인
 
-# 개인 Pro: read/fetch 전용(위 3줄 대신 사용)
+# Plus/Pro에서 쓰기 action이 빠지거나 거부될 때만 read-only 폴백
 # cp writer.config.personal-pro.example.json writer.config.json
 # repo_root / base_branch / deny_paths 수정
 # node selfcheck-readonly.mjs   # READ-ONLY PASS 확인
