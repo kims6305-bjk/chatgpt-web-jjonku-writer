@@ -14,10 +14,11 @@ read/write/commit/PR access to **one repository on your machine** — with no sh
 > for read/fetch actions; Plus and Free do not currently provide this full write-capable workflow.
 > Source: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
 >
-> **About Luna:** GPT-5.6 Luna is unlimited/credit-free where offered, but OpenAI currently documents
-> Luna as the default for Free and Go — plans that do not support this custom MCP workflow. Personal
-> Pro supports read/fetch MCP, but Luna is not guaranteed in its picker. Do not market “unlimited
-> personal Luna + MCP” unless that exact combination appears and works in the operator's account.
+> **About Luna:** OpenAI documents Luna as unavailable in standard paid Chat, but available in
+> **Work and Codex for Plus and Pro** (as well as Business/Enterprise). Separately, OpenAI's custom-MCP
+> policy says personal **Pro is read/fetch-only** and full write/modify requires Business/Enterprise/Edu.
+> Therefore Luna+personal-Pro read-only is a supported target; Luna+personal full writer is not an
+> officially supported claim until OpenAI changes that policy or an account-level write test proves it.
 
 ### Two supported profiles
 

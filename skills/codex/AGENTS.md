@@ -13,9 +13,9 @@ Codex pool your coding CLI drains.
 Personal Pro supports custom MCP read/fetch only; Plus, Free, and Go do not support this workflow.
 Verify the current policy at https://help.openai.com/en/articles/12584461 before setup.
 
-**Luna is not a loophole:** OpenAI documents Luna as unlimited where offered, but currently defaults
-it to Free/Go, which lack custom MCP. Pro can use read/fetch MCP, but Luna is not guaranteed in its
-model picker. Never claim unlimited personal Luna+MCP without an end-to-end test on that account.
+**Luna surface boundary:** Luna is not selectable in standard paid Chat, but OpenAI documents it as
+available in Work and Codex for Plus and Pro. That does not erase the separate MCP permission gate:
+personal Pro custom MCP is read/fetch-only; full write/modify requires Business/Enterprise/Edu.
 
 Two profiles ship:
 - full: `writer.config.example.json` + `selfcheck.mjs`

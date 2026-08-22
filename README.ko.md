@@ -8,7 +8,7 @@ ChatGPT 웹앱이 로컬 저장소를 직접 읽고 수정하고 테스트한 �
 
 > **현재 요금제 조건:** 이 레포가 사용하는 전체 MCP 쓰기·수정 기능은 **ChatGPT Business, Enterprise 또는 Edu**가 필요합니다. 개인 **Pro**는 커스텀 MCP를 read/fetch 용도로만 연결할 수 있고, Plus·Free는 현재 이 전체 쓰기 워크플로를 지원하지 않습니다. 근거: [OpenAI — Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461).
 >
-> **Luna 주의:** GPT-5.6 Luna는 제공되는 화면에서는 무크레딧·무제한이지만, OpenAI는 현재 Luna를 Free·Go의 기본 모델로 안내합니다. Free·Go는 커스텀 MCP를 지원하지 않습니다. 개인 Pro는 read/fetch MCP를 지원하지만 Luna가 모델 선택기에 나온다는 보장은 없습니다. 따라서 실제 Pro 계정에서 Luna와 커스텀 MCP가 함께 보이고 작동하기 전에는 “개인 Luna 무제한 MCP”라고 배포하지 않습니다.
+> **Luna 정리:** OpenAI 공식 문서상 Luna는 유료 사용자의 일반 Chat에서는 선택할 수 없지만 **Plus·Pro의 Work와 Codex에서는 사용 가능**합니다(Business·Enterprise도 가능). 별도로 커스텀 MCP 정책은 개인 **Pro를 read/fetch 전용**으로 제한하고, 전체 write/modify는 Business·Enterprise·Edu에만 허용합니다. 따라서 Luna+개인 Pro read-only는 배포 대상이지만, Luna+개인 전체 writer는 정책 변경 또는 실제 계정 쓰기 종단시험 전에는 공식 지원으로 주장하지 않습니다.
 
 ### 제공 프로필 2종
 
