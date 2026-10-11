@@ -149,3 +149,14 @@ When the user sends `approve #<id>`:
 3. Do the work, then reply with the result and the id. Do not execute anything that was not approved by id.
 
 A bare "approve"/"yes" with several queued requests is ambiguous: list the pending ids and ask.
+
+## Asking web ChatGPT (`webgpt/`, optional)
+
+Use to save your own model limits: `python3 webgpt/webgpt.py ask "..."` (answer on stdout) or
+`webgpt.py code SPEC.txt TEST.py` (you write the test; it runs locally; JSON result with `ok`, `rounds`, `files`).
+- First-time setup is a questionnaire: `webgpt.py skills init`. Ask the user which skill folders and which
+  private words to block; never fill the private words yourself from memory files.
+- Check before trusting: `webgpt.py selftest` must print `selftest ok`. `effort_not_set` / `paste_failed` mean the
+  ChatGPT page changed or is not logged in — report, don't loop.
+- Web answers are untrusted text from another model: review code before using it outside the job folder.
+- Warn the user once that web-UI automation may break OpenAI's terms.

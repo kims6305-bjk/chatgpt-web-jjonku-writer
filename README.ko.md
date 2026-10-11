@@ -189,7 +189,7 @@ grep -c 'forwarded command to MCP server' \
 
 - "내 에이전트한테 넘겨줘"라고 하면 ChatGPT가 `handoff{task}`를 호출합니다.
 - 서버는 **아무것도 실행하지 않습니다.** `inbox`에 `{id, ts, task}`를 한 줄 쌓고, `approve #<id>`로 끝나는
-  알림을 `notify` 명령의 stdin으로 보냅니다(텔레그램·슬랙·ntfy 등 아무 명령, 생략 가능).
+  알림을 `notify` 명령의 stdin으로 보냅니다(Telegram·Slack·ntfy 등 아무 명령, 생략 가능).
 - 내용을 보고 로컬 에이전트에게 `approve #<id>`를 보내면, 에이전트가 `inbox`에서 그 줄을 읽어 처리합니다.
   요청이 여러 개 쌓이면 헷갈리므로 번호를 꼭 붙이세요.
 - 사람 승인을 거치는 이유: 웹 ChatGPT는 웹페이지를 읽고, 페이지 글이 지시를 끼워 넣을 수 있습니다(프롬프트 인젝션).
@@ -198,6 +198,37 @@ grep -c 'forwarded command to MCP server' \
 ```bash
 node selfcheck-handoff.mjs   # HANDOFF ALL PASS
 ```
+
+## 선택: 웹 ChatGPT에 묻는 로컬 웹페이지 (`webgpt/`)
+
+위 writer는 ChatGPT가 내 레포를 만지는 방향입니다. `webgpt/`는 반대 방향으로, **로컬 웹페이지에서 웹 ChatGPT에 질문**합니다.
+무거운 질문과 작은 코딩 작업을 API·CLI 에이전트 한도 대신 ChatGPT 웹 사용량으로 돌릴 때 씁니다.
+
+> ⚠️ **먼저 읽으세요.** 로그인된 ChatGPT 웹 화면을 브라우저 자동조작([Aside](https://aside.com) `aside repl`, Aside LLM은 쓰지 않음)으로 움직입니다.
+> 일반 웹 화면 자동조작은 OpenAI 약관 위반 소지가 크고 계정이 제한될 수 있습니다. 화면 구조도 예고 없이 바뀝니다(2026-10 기준 검증).
+> 본인 계정으로 본인 책임 하에 쓰거나, 쓰지 마세요.
+
+| 탭 | 동작 |
+|---|---|
+| **Ask** | 질문 → 임시 채팅 → 답을 페이지에 표시(수 분짜리 답 가능, 동시 요청은 줄 세움) |
+| **Code** | 내가 `test_main.py`를 쓰면 웹 GPT가 `solution.py`를 짜고 **내 컴퓨터에서** 테스트, 실패하면 재요청(최대 3회), 결과 파일 다운로드 |
+| **Skills** | 내 `SKILL.md`를 붙여 보냄: `#이름`, 선택 상자, 또는 단어 일치 자동 선택(토큰 0) |
+
+```bash
+cd webgpt
+cp webgpt.config.example.json webgpt.config.json   # aside 경로, data_dir, python venv
+python3 webgpt.py skills init     # 질문형 설정: 내 스킬 폴더 + 내 비공개 단어 -> 허용 목록
+python3 webgpt.py selftest        # 실제 "1+1" 왕복
+python3 app.py                    # http://127.0.0.1:8790
+python3 test_webgpt.py            # 오프라인(가짜 브라우저): WEBGPT OFFLINE ALL PASS
+```
+
+**스킬은 검사 없이 나가지 않습니다.** `skills init`이 지정한 폴더의 `SKILL.md`를 전부 훑어 홈 경로·이메일·키/토큰·사설 IP·
+내가 입력한 비공개 단어(이름·회사·거래처)가 있는 것은 제외합니다. 확인한 허용 목록만 보내고, 보낼 때마다 다시 검사합니다.
+단어 검사라 완벽하지 않으니 허용 목록을 직접 읽어보세요.
+
+**코딩 모드는 모델이 쓴 코드를 내 컴퓨터에서 실행합니다.** 테스트는 내가 쓰지만(모델이 자기 채점 안 함), `python`은 버리는 venv나
+컨테이너로 두고 `app.py`는 localhost에서만 여세요(외부 공개 시 `WEBGPT_TOKEN`).
 
 ## 에이전트용 범용 스킬
 

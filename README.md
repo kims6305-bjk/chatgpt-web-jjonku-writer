@@ -255,6 +255,45 @@ node selfcheck-handoff.mjs   # HANDOFF ALL PASS (hidden when unconfigured, empty
 
 ---
 
+## Optional: a local web page that asks web ChatGPT (`webgpt/`)
+
+The writer above lets ChatGPT reach your repo. `webgpt/` is the other direction: **you (or your scripts) ask
+web ChatGPT from a local page**, so heavy questions and small coding jobs run on your ChatGPT web quota instead
+of your API / CLI-agent limits.
+
+> ⚠️ **Read first.** This drives the logged-in ChatGPT web page with browser automation
+> ([Aside](https://aside.com) `aside repl`: scripted, no Aside LLM involved). Automating the consumer web UI is
+> very likely against OpenAI's terms and can get the account limited. The page structure also changes without
+> notice — selectors here were last verified 2026-10. Use your own account, at your own risk, or don't.
+
+| Tab | What happens |
+|---|---|
+| **Ask** | question → temporary chat → answer on the page (multi-minute answers OK, concurrent requests queue) |
+| **Code** | you write `test_main.py`; web GPT writes `solution.py`; it runs **here**; failures go back (max 3 rounds); output files downloadable |
+| **Skills** | your own `SKILL.md` files can be attached: `#name`, picker, or auto-pick by word overlap (0 tokens) |
+
+```bash
+cd webgpt
+cp webgpt.config.example.json webgpt.config.json   # aside path, data_dir, python venv
+python3 webgpt.py skills init     # questionnaire: your skill folders + your private words -> allowlist
+python3 webgpt.py selftest        # live "1+1" round trip
+python3 app.py                    # http://127.0.0.1:8790
+python3 test_webgpt.py            # offline (fake browser): WEBGPT OFFLINE ALL PASS
+```
+
+**Skills never leave unchecked.** `skills init` scans every `SKILL.md` in the folders you name and holds back
+anything with home paths, e-mails, keys/tokens, private IPs, or the private words you typed (name, company,
+clients). Only the allowlist you confirm is sent, and every send re-checks the text, so a skill that later gains
+private content is blocked again. It is a word filter, not a guarantee: read the allowlist.
+
+**Code mode runs model-written code on your machine.** The test is yours (the model never grades itself), but
+point `python` at a throwaway venv or container, and keep `app.py` on localhost (set `WEBGPT_TOKEN` otherwise).
+
+Settings worth knowing: `effort` + `model_button_label` (the model picker's aria-label in *your* UI language)
+pin reasoning effort each run; leave both `null` to skip. `notify` gets results on stdin (Telegram/Slack/ntfy).
+
+---
+
 ## Agent skills (Claude Code / Codex / Hermes / OpenClaw)
 
 `skills/` ships the same procedure in three formats so your *local* agent can install, operate and

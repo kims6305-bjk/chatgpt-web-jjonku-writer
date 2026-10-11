@@ -2,3 +2,5 @@ tunnel.env
 tunnel.log
 writer.config.json
 node_modules/
+webgpt/webgpt.config.json
+__pycache__/

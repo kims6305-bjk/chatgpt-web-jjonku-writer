@@ -1,0 +1,12 @@
+{
+  "aside": "/absolute/path/to/aside",
+  "account": null,
+  "effort": null,
+  "model_button_label": null,
+  "data_dir": "~/.local/share/webgpt",
+  "notify": null,
+  "skill_dirs": [],
+  "block_words": [],
+  "python": "/absolute/path/to/venv/bin/python",
+  "libs": "pandas, openpyxl, matplotlib"
+}
