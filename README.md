@@ -228,6 +228,33 @@ Everything lands on `chatgpt/*` → PR → your required checks.
 
 ---
 
+## Optional: hand tasks back to your local agent (`handoff`)
+
+Off by default. Add a `handoff` block to `writer.config.json` and ChatGPT gets a 10th tool:
+
+```json
+"handoff": {
+  "inbox": "/absolute/path/handoff/requests.jsonl",
+  "notify": ["/absolute/path/notify.sh"]
+}
+```
+
+- ChatGPT calls `handoff{task}` when you say "pass this to my agent" (or the task needs the machine itself).
+- The server **never executes anything**. It appends `{id, ts, task}` to `inbox` and pipes a message ending in
+  `approve #<id>` to `notify` on stdin (any command: Telegram/Slack/ntfy/`osascript`, or omit it).
+- You review the message and send `approve #<id>` to your local agent; the agent reads that line from `inbox`
+  and does the work. Always quote the id — a bare "yes" is ambiguous once two requests are queued.
+- Why the human gate: web ChatGPT reads web pages, and page text can steer it (prompt injection).
+  A queue + approval keeps that text from ever reaching a shell on its own.
+- Cost: everything up to the queue uses only your ChatGPT web quota. The approved task runs on your local
+  agent's model, so hand off only what really needs the machine.
+
+```bash
+node selfcheck-handoff.mjs   # HANDOFF ALL PASS (hidden when unconfigured, empty refused, never executes, notify failure surfaced)
+```
+
+---
+
 ## Agent skills (Claude Code / Codex / Hermes / OpenClaw)
 
 `skills/` ships the same procedure in three formats so your *local* agent can install, operate and

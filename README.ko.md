@@ -176,6 +176,29 @@ grep -c 'forwarded command to MCP server' \
 
 웹 화면에 출력된 파일 내용과 내 컴퓨터의 실제 파일 내용이 일치해야 완료입니다.
 
+## 선택: 로컬 에이전트에게 작업 넘기기 (`handoff`)
+
+기본은 꺼져 있습니다. `writer.config.json`에 `handoff`를 넣으면 ChatGPT에 10번째 도구가 생깁니다.
+
+```json
+"handoff": {
+  "inbox": "/absolute/path/handoff/requests.jsonl",
+  "notify": ["/absolute/path/notify.sh"]
+}
+```
+
+- "내 에이전트한테 넘겨줘"라고 하면 ChatGPT가 `handoff{task}`를 호출합니다.
+- 서버는 **아무것도 실행하지 않습니다.** `inbox`에 `{id, ts, task}`를 한 줄 쌓고, `approve #<id>`로 끝나는
+  알림을 `notify` 명령의 stdin으로 보냅니다(텔레그램·슬랙·ntfy 등 아무 명령, 생략 가능).
+- 내용을 보고 로컬 에이전트에게 `approve #<id>`를 보내면, 에이전트가 `inbox`에서 그 줄을 읽어 처리합니다.
+  요청이 여러 개 쌓이면 헷갈리므로 번호를 꼭 붙이세요.
+- 사람 승인을 거치는 이유: 웹 ChatGPT는 웹페이지를 읽고, 페이지 글이 지시를 끼워 넣을 수 있습니다(프롬프트 인젝션).
+- 비용: 큐에 넣기까지는 ChatGPT 웹 사용량만 씁니다. 승인 뒤 실행은 로컬 에이전트 모델을 쓰므로, 컴퓨터가 꼭 필요한 일만 넘기세요.
+
+```bash
+node selfcheck-handoff.mjs   # HANDOFF ALL PASS
+```
+
 ## 에이전트용 범용 스킬
 
 - `skills/hermes/.../SKILL.md`: Hermes, OpenClaw, Claude Code용

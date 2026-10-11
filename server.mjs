@@ -14,6 +14,8 @@ const ROOT = path.resolve(CFG.repo_root);
 const READ_ONLY = CFG.read_only === true;
 const PREFIX = CFG.branch_prefix ?? "chatgpt/";
 const CHECKS = CFG.checks ?? {};           // {name: ["cmd","arg",...]}
+// optional {inbox: "/abs/requests.jsonl", notify: ["cmd", ...]} — task text goes to notify on stdin
+const HANDOFF = CFG.handoff?.inbox ? { ...CFG.handoff, inbox: path.resolve(CFG.handoff.inbox) } : null;
 const DENY = (CFG.deny_paths ?? [".github/workflows", ".git/config"]).map((p) => p.replace(/\/+$/, ""));
 
 const fail = (m) => { throw new Error(m); };
@@ -129,7 +131,34 @@ const TOOLS = {
       return `exit=${r.code}\n${r.stdout}${r.stderr}`;
     },
   },
+  handoff: {
+    desc:
+      "Hand a task to the user's local agent on this machine. Nothing runs: the task is queued and the user " +
+      "is notified; it is executed only after the user approves it on their side. Use when the user asks to " +
+      "pass work to their local agent, or the task needs the machine itself (files outside the repo, services).",
+    schema: {
+      type: "object",
+      properties: { task: { type: "string", description: "Self-contained task: context, goal, done-criteria." } },
+      required: ["task"],
+    },
+    fn: ({ task }) => {
+      const t = String(task ?? "").trim().slice(0, 3500);
+      if (!t) fail("empty task");
+      const id = Date.now().toString(36);
+      mkdirSync(path.dirname(HANDOFF.inbox), { recursive: true });
+      writeFileSync(HANDOFF.inbox, JSON.stringify({ id, ts: new Date().toISOString(), task: t }) + "\n", { flag: "a" });
+      // Human gate: never execute here. Web content can steer the model (prompt injection),
+      // so the only side effect is a queue line + a notification the user must act on.
+      if (HANDOFF.notify?.length) {
+        const body = `Handoff request #${id}\n\n${t}\n\nApprove with: approve #${id}`;
+        const r = spawnSync(HANDOFF.notify[0], HANDOFF.notify.slice(1), { input: body, encoding: "utf8", timeout: 60000 });
+        if (r.error || r.status !== 0) fail(`queued #${id}, but notify failed: ${(r.stderr || r.error?.message || "").slice(-300)}`);
+      }
+      return `queued #${id}. The user must approve it before anything runs.`;
+    },
+  },
 };
+if (!HANDOFF) delete TOOLS.handoff;
 
 // ---- minimal MCP stdio (JSON-RPC 2.0, line-delimited) ----
 const send = (o) => process.stdout.write(JSON.stringify(o) + "\n");
