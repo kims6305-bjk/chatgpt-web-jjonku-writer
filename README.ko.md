@@ -4,6 +4,18 @@
 
 > **쫀쿠**는 AI 커뮤니티에서 구독/계정을 부르는 은어입니다. **웹쫀쿠**는 Codex CLI 한도가 아니라 일반 ChatGPT 웹앱 한도를 활용하는 방식을 뜻합니다.
 
+![ChatGPT 웹 사용량을 쓰는 세 가지 길](docs/overview.ko.png)
+
+**이 레포에 들어 있는 것 (2026-10 업데이트)**
+
+| 구성 | 방향 | 기본값 | 설명 위치 |
+|---|---|---|---|
+| Writer (도구 9개) | ChatGPT → 내 레포 | 켜짐 | 아래 |
+| `handoff` 도구 | ChatGPT → 내 로컬 에이전트, 번호로 사람 승인 | 꺼짐 | [handoff](#선택-로컬-에이전트에게-작업-넘기기-handoff) |
+| `webgpt/` 페이지 | 나 → 웹 ChatGPT (Ask · Code · 내 스킬) | 별도, 선택 | [webgpt](#선택-웹-chatgpt에-묻는-로컬-웹페이지-webgpt) |
+
+`webgpt/`는 ChatGPT 웹 화면을 자동조작하는 **비공식** 방식입니다. 쓰기 전에 해당 절의 경고를 읽으세요.
+
 ChatGPT 웹앱이 로컬 저장소를 직접 읽고 수정하고 테스트한 뒤 PR까지 올리게 하는 **OpenAI Secure Tunnel + stdio MCP Git writer**입니다. 범용 셸은 노출하지 않습니다.
 
 > **요금제 동작:** 이 레포는 모든 계정에 동일한 가드형 9도구 writer를 제공합니다. **Business에서는 종단 검증 완료**했습니다. 현재 ChatGPT 요금표는 **Plus와 Pro 모두 Developer mode 지원**으로 표시하므로 개인 계정도 전체 프로필을 먼저 시도합니다. 다만 별도 OpenAI MCP 도움말은 전체 write/modify의 공식 지원을 Business·Enterprise·Edu로, Pro를 read/fetch 전용으로 안내하고 있어 Plus·Pro 전체 쓰기는 실제 계정 rollout에 따라 달라질 수 있습니다.

@@ -6,6 +6,18 @@
 
 **Let the ChatGPT web app write code in your local repo — on a usage quota separate from Codex.**
 
+![Three ways to use the ChatGPT web quota](docs/overview.en.png)
+
+**What's in this repo (2026-10 update)**
+
+| Part | Direction | Default | Section |
+|---|---|---|---|
+| Writer (9 tools) | ChatGPT → your repo | on | below |
+| `handoff` tool | ChatGPT → your local agent, human approves by id | off | [Handoff](#optional-hand-tasks-back-to-your-local-agent-handoff) |
+| `webgpt/` page | you → web ChatGPT (Ask · Code · your skills) | separate, opt-in | [webgpt](#optional-a-local-web-page-that-asks-web-chatgpt-webgpt) |
+
+`webgpt/` automates the ChatGPT web UI and is **not** an official interface — read its warning before using it.
+
 A local stdio MCP server + OpenAI Secure Tunnel that gives web ChatGPT (chatgpt.com, phone or desktop)
 read/write/commit/PR access to **one repository on your machine** — with no shell exposure.
 
